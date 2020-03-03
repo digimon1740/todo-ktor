@@ -25,10 +25,10 @@ fun Routing.todo() {
             val body = call.receive<Map<String, Any>>()
 
         }
-        put() {
+        put("/{id}") {
 
         }
-        delete() {
+        delete("/{id}") {
 
         }
     }
