@@ -1,4 +1,5 @@
 import com.fasterxml.jackson.databind.SerializationFeature
+import config.Database
 import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.features.CallLogging
@@ -6,7 +7,7 @@ import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
 import io.ktor.jackson.jackson
 import io.ktor.routing.Routing
-import org.jetbrains.exposed.sql.Database
+import service.TodoService
 
 fun Application.main() {
     install(DefaultHeaders)
@@ -17,7 +18,8 @@ fun Application.main() {
         }
     }
     install(Routing) {
-        todo()
+        val service = TodoService()
+        todo(service)
     }
-    Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver", user = "sa", password = "sa")
+    Database.init()
 }
