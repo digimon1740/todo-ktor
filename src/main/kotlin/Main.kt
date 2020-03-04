@@ -1,5 +1,5 @@
 import com.fasterxml.jackson.databind.SerializationFeature
-import config.Database
+import config.DatabaseInitializer
 import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.features.CallLogging
@@ -21,5 +21,5 @@ fun Application.main() {
         val service = TodoService()
         todo(service)
     }
-    Database.init()
+    DatabaseInitializer.init()
 }
