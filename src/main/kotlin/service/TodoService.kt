@@ -2,32 +2,57 @@ package service
 
 import config.query
 import entity.Todo
-import model.TodoModel
+import model.TodoRequest
+import model.TodoResponse
 import java.time.LocalDateTime
 
 class TodoService {
 
     suspend fun getAll() = query {
-        Todo.all()
+        Todo.all().map {
+            TodoResponse(
+                id = it.id.value,
+                content = it.content,
+                done = it.done,
+                createdAt = it.createdAt,
+                updatedAt = it.updatedAt
+            )
+        }.toList()
     }
 
     suspend fun getById(id: Int) = query {
-        Todo.findById(id)
-    }
-
-    suspend fun new(model: TodoModel) = query {
-        Todo.new {
-            this.content = model.content
-            this.createdAt = LocalDateTime.now()
-            this.updatedAt = this.createdAt
+        Todo.findById(id)?.let {
+            TodoResponse(
+                id = it.id.value,
+                content = it.content,
+                done = it.done,
+                createdAt = it.createdAt,
+                updatedAt = it.updatedAt
+            )
         }
     }
 
-    suspend fun renew(id: Int, model: TodoModel) = query {
-        Todo.new(id) {
-            this.content = model.content
-            this.done = model.done
-            this.updatedAt = LocalDateTime.now()
+    suspend fun new(req: TodoRequest) = query {
+        Todo.new {
+            this.content = req.content
+        }.let {
+            TodoResponse(
+                id = it.id.value,
+                content = it.content,
+                done = it.done,
+                createdAt = it.createdAt,
+                updatedAt = it.updatedAt
+            )
+        }
+    }
+
+    suspend fun renew(id: Int, req: TodoRequest) {
+        query {
+            Todo.new(id) {
+                this.content = req.content
+                this.done = req.done ?: false
+                this.updatedAt = LocalDateTime.now()
+            }
         }
     }
 
