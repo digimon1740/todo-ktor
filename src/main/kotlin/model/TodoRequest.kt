@@ -1,4 +1,4 @@
-package model
+package main.kotlin.model
 
 import java.time.LocalDateTime
 

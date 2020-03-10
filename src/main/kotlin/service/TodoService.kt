@@ -1,9 +1,9 @@
-package service
+package main.kotlin.service
 
-import config.query
-import entity.Todo
-import model.TodoRequest
-import model.TodoResponse
+import main.kotlin.config.query
+import main.kotlin.entity.Todo
+import main.kotlin.model.TodoRequest
+import main.kotlin.model.TodoResponse
 import java.time.LocalDateTime
 
 class TodoService {

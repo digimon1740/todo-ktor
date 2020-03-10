@@ -1,9 +1,8 @@
-package config
+package main.kotlin.config
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import entity.Todos
-import io.ktor.features.NotFoundException
+import main.kotlin.entity.Todos
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils.create
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction

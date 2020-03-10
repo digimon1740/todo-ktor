@@ -1,4 +1,4 @@
-package entity
+package main.kotlin.entity
 
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass

@@ -1,18 +1,24 @@
+package main.kotlin
+
 import io.ktor.application.call
+import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.request.receive
 import io.ktor.response.respond
+import io.ktor.response.respondText
 import io.ktor.routing.Routing
 import io.ktor.routing.delete
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.put
 import io.ktor.routing.route
-import model.TodoRequest
-import service.TodoService
+import main.kotlin.model.TodoRequest
+import main.kotlin.service.TodoService
 
 
-fun Routing.todo(service: TodoService) {
+fun Routing.todo() {
+    val service by lazy { TodoService() }
+
     route("todos") {
         get {
             call.respond(service.getAll())
