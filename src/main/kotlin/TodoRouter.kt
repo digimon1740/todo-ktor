@@ -23,9 +23,7 @@ fun Routing.todo() {
         }
         get("/{id}") {
             val id = call.parameters["id"]?.toIntOrNull() ?: return@get
-            val todo = service.getById(id)
-            if (todo == null) call.response.status(HttpStatusCode.NotFound)
-            else call.respond(todo)
+            service.getById(id)?.let { call.respond(it) } ?: call.response.status(HttpStatusCode.NotFound)
         }
         post {
             val body = call.receive<TodoRequest>()
