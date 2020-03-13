@@ -7,6 +7,11 @@ import main.kotlin.main
 
 class ApplicationTest {
 
+    @BeforeTest
+    fun setUp() {
+
+    }
+
     @Test
     fun testRoot() {
         withTestApplication({ main(testing = true) }) {
