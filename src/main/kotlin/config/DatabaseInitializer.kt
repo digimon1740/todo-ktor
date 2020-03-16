@@ -24,6 +24,8 @@ private fun hikariConfig() =
         jdbcUrl = "jdbc:h2:mem:test"
         maximumPoolSize = 3
         isAutoCommit = false
+        username = "sa"
+        password = "sa"
         transactionIsolation = "TRANSACTION_REPEATABLE_READ"
         validate()
     }
