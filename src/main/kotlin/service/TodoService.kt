@@ -32,9 +32,9 @@ class TodoService {
         }
     }
 
-    suspend fun new(req: TodoRequest) = query {
+    suspend fun new(content: String) = query {
         Todo.new {
-            this.content = req.content
+            this.content = content
         }.let {
             TodoResponse(
                 id = it.id.value,
