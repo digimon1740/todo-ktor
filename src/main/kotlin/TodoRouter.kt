@@ -15,17 +15,16 @@ import io.ktor.util.KtorExperimentalAPI
 import main.kotlin.model.TodoRequest
 import main.kotlin.service.TodoService
 
-
 @KtorExperimentalAPI
-fun Routing.todo() {
-    val service by lazy { TodoService() }
+fun Routing.todo(service: TodoService) {
 
     route("todos") {
         get {
             call.respond(service.getAll())
         }
         get("/{id}") {
-            val id = call.parameters["id"]?.toIntOrNull() ?: throw BadRequestException("Parameter id is null")
+            val id = call.parameters["id"]?.toIntOrNull()
+                ?: throw BadRequestException("Parameter id is null")
             service.getById(id)?.let { call.respond(it) }
         }
         post {
@@ -34,13 +33,15 @@ fun Routing.todo() {
             call.response.status(HttpStatusCode.Created)
         }
         put("/{id}") {
-            val id = call.parameters["id"]?.toIntOrNull() ?: throw BadRequestException("Parameter id is null")
+            val id = call.parameters["id"]?.toIntOrNull()
+                ?: throw BadRequestException("Parameter id is null")
             val body = call.receive<TodoRequest>()
             call.respond(service.renew(id, body))
             call.response.status(HttpStatusCode.NoContent)
         }
         delete("/{id}") {
-            val id = call.parameters["id"]?.toIntOrNull() ?: throw BadRequestException("Parameter id is null")
+            val id = call.parameters["id"]?.toIntOrNull()
+                ?: throw BadRequestException("Parameter id is null")
             service.delete(id)
             call.response.status(HttpStatusCode.NoContent)
         }
