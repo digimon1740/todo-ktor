@@ -1,62 +1,44 @@
 package main.kotlin.service
 
+import io.ktor.features.NotFoundException
+import io.ktor.util.KtorExperimentalAPI
 import main.kotlin.config.query
 import main.kotlin.entity.Todo
+import main.kotlin.entity.Todos
 import main.kotlin.model.TodoRequest
 import main.kotlin.model.TodoResponse
+import org.jetbrains.exposed.sql.SortOrder
 import java.time.LocalDateTime
 
+@KtorExperimentalAPI
 class TodoService {
 
     suspend fun getAll() = query {
-        Todo.all().map {
-            TodoResponse(
-                id = it.id.value,
-                content = it.content,
-                done = it.done,
-                createdAt = it.createdAt,
-                updatedAt = it.updatedAt
-            )
-        }.toList()
+        Todo.all()
+            .orderBy(Todos.id to SortOrder.DESC)
+            .map(TodoResponse.Companion::of)
+            .toList()
     }
 
     suspend fun getById(id: Int) = query {
-        Todo.findById(id)?.let {
-            TodoResponse(
-                id = it.id.value,
-                content = it.content,
-                done = it.done,
-                createdAt = it.createdAt,
-                updatedAt = it.updatedAt
-            )
-        }
+        Todo.findById(id)?.run(TodoResponse.Companion::of) ?: throw NotFoundException()
     }
 
     suspend fun new(content: String) = query {
-        Todo.new {
-            this.content = content
-        }.let {
-            TodoResponse(
-                id = it.id.value,
-                content = it.content,
-                done = it.done,
-                createdAt = it.createdAt,
-                updatedAt = it.updatedAt
-            )
-        }
+        Todo.new { this.content = content }
+            .run(TodoResponse.Companion::of)
     }
 
-    suspend fun renew(id: Int, req: TodoRequest) {
-        query {
-            Todo.new(id) {
-                this.content = req.content
-                this.done = req.done ?: false
-                this.updatedAt = LocalDateTime.now()
-            }
-        }
+    suspend fun renew(id: Int, req: TodoRequest) = query {
+        val todo = Todo.findById(id) ?: throw NotFoundException()
+        todo.apply {
+            content = req.content
+            done = req.done ?: false
+            updatedAt = LocalDateTime.now()
+        }.run(TodoResponse.Companion::of)
     }
 
     suspend fun delete(id: Int) = query {
-        Todo.findById(id)?.delete()
+        Todo.findById(id)?.delete() ?: throw NotFoundException()
     }
 }

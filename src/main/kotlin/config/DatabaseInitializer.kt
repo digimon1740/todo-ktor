@@ -2,10 +2,11 @@ package main.kotlin.config
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import main.kotlin.entity.Todos
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils.create
-import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object DatabaseInitializer {
@@ -30,6 +31,8 @@ private fun hikariConfig() =
         validate()
     }
 
-suspend fun <T> query(block: suspend () -> T): T = newSuspendedTransaction {
-    block()
+suspend fun <T> query(block: () -> T): T = withContext(Dispatchers.IO) {
+    transaction {
+        block()
+    }
 }
