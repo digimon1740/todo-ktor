@@ -25,7 +25,11 @@ class TodoService {
     }
 
     suspend fun new(content: String) = query {
-        Todo.new { this.content = content }
+        Todo.new {
+            this.content = content
+            this.createdAt = LocalDateTime.now()
+            this.updatedAt = this.createdAt
+        }
     }
 
     suspend fun renew(id: Int, req: TodoRequest) = query {
