@@ -25,7 +25,7 @@ fun Routing.todo(service: TodoService) {
         get("/{id}") {
             val id = call.parameters["id"]?.toIntOrNull()
                 ?: throw BadRequestException("Parameter id is null")
-            service.getById(id)?.let { call.respond(it) }
+            call.respond(service.getById(id))
         }
         post {
             val body = call.receive<TodoRequest>()
