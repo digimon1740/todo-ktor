@@ -26,7 +26,6 @@ class TodoService {
 
     suspend fun new(content: String) = query {
         Todo.new { this.content = content }
-            .run(TodoResponse.Companion::of)
     }
 
     suspend fun renew(id: Int, req: TodoRequest) = query {
@@ -35,7 +34,7 @@ class TodoService {
             content = req.content
             done = req.done ?: false
             updatedAt = LocalDateTime.now()
-        }.run(TodoResponse.Companion::of)
+        }
     }
 
     suspend fun delete(id: Int) = query {

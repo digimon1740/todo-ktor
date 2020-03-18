@@ -29,14 +29,14 @@ fun Routing.todo(service: TodoService) {
         }
         post {
             val body = call.receive<TodoRequest>()
-            call.respond(service.new(body.content))
+            service.new(body.content)
             call.response.status(HttpStatusCode.Created)
         }
         put("/{id}") {
             val id = call.parameters["id"]?.toIntOrNull()
                 ?: throw BadRequestException("Parameter id is null")
             val body = call.receive<TodoRequest>()
-            call.respond(service.renew(id, body))
+            service.renew(id, body)
             call.response.status(HttpStatusCode.NoContent)
         }
         delete("/{id}") {
